@@ -1,0 +1,83 @@
+# Jellyfish Backend
+
+基于 FastAPI + LangChain/LangGraph + SQLAlchemy 的后端 API，使用 **uv** 管理依赖。
+
+## 技术栈
+
+- **FastAPI**：Web 框架
+- **LangChain / LangGraph**：链与工作流编排，`PromptTemplate` 管理提示词
+- **SQLAlchemy**：异步 ORM，默认 SQLite（可换 PostgreSQL 等）
+- **uv**：包管理与虚拟环境
+
+## 目录结构
+
+```
+backend/
+├── pyproject.toml          # 项目与依赖（uv）
+├── .python-version        # Python 版本
+├── app/
+│   ├── __init__.py
+│   ├── main.py             # FastAPI 入口
+│   ├── config.py           # 配置（pydantic-settings）
+│   ├── dependencies.py     # 依赖注入（如 get_db）
+│   ├── api/
+│   │   └── v1/
+│   │       ├── __init__.py # 路由聚合
+│   │       └── routes/     # 各模块路由
+│   ├── core/
+│   │   └── db.py           # SQLAlchemy 引擎与 Base
+│   ├── models/             # ORM 模型
+│   ├── schemas/            # Pydantic 请求/响应
+│   ├── services/           # 业务逻辑
+│   └── chains/             # LangChain PromptTemplate、LangGraph
+├── tests/
+├── .env.example
+└── README.md
+```
+
+## 快速开始
+
+### 1. 安装 uv（若未安装）
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### 2. 进入 backend 并安装依赖
+
+```bash
+cd backend
+uv sync
+```
+
+### 3. 配置环境
+
+```bash
+cp .env.example .env
+# 按需编辑 .env
+```
+
+### 4. 启动服务
+
+```bash
+uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+- API 文档：http://localhost:8000/docs  
+- 健康检查：http://localhost:8000/health  
+- API v1 示例：http://localhost:8000/api/v1/example/prompt
+
+## 常用命令
+
+| 命令 | 说明 |
+|------|------|
+| `uv sync` | 安装/同步依赖 |
+| `uv add <pkg>` | 添加依赖 |
+| `uv run uvicorn app.main:app --reload` | 开发运行 |
+| `uv run pytest` | 运行测试 |
+
+## 扩展说明
+
+- **数据库**：在 `app/models/` 下新增模型并继承 `Base`，在 `app/core/db.py` 中可调用 `init_db()` 建表。
+- **提示词**：在 `app/chains/prompts.py` 中增加 `PromptTemplate`。
+- **工作流**：在 `app/chains/graphs.py` 中定义 `StateGraph` 并 `compile()`，在路由中 `ainvoke` 调用。
