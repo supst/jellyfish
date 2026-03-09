@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="./README.md">简体中文</a> ·
-  <a href="./README.en.md">English</a>
+  <a href="./docs/README.en.md">English</a>
 </p>
 
 一站式 AI 生成短剧（竖屏短剧 / 微短剧）的生产工具  
