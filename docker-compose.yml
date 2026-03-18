@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: front/Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      # Database (using SQLite for simplicity)
+      - DATABASE_URL=sqlite:///./jellyfish.db
+      # Storage
+      - STORAGE_PATH=/app/storage
+    volumes:
+      - jellyfish-storage:/app/storage
+    restart: unless-stopped
+
+volumes:
+  jellyfish-storage:
