@@ -1,12 +1,15 @@
-# Frontend Dockerfile
-FROM node:20-alpine AS builder
+# Simple Frontend Dockerfile
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y nodejs npm curl && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g pnpm && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm
-
-# Copy package files (context is root, so use front/)
+# Copy package files
 COPY front/package.json front/pnpm-lock.yaml ./
 
 # Install dependencies  
@@ -18,9 +21,5 @@ COPY front/ .
 # Build
 RUN pnpm run build
 
-# Production
-FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY front/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+CMD ["ls", "dist"]
