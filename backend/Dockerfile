@@ -7,13 +7,13 @@ RUN pip install uv
 WORKDIR /app
 
 # Copy dependency files
-COPY backend/pyproject.toml backend/uv.lock ./
+COPY pyproject.toml uv.lock ./
 
 # Install dependencies using uv
 RUN uv sync --frozen --no-dev
 
 # Copy source code
-COPY backend/ .
+COPY . .
 
 # Create storage directory
 RUN mkdir -p /app/storage
