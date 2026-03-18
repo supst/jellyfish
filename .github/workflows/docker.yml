@@ -49,8 +49,12 @@ jobs:
           echo "Front dir:"
           ls -la front/
           echo ""
-          echo "Back dir:"
-          ls -la backend/
+          echo "Check Dockerfile exists:"
+          cat front/Dockerfile
+
+      - name: Build frontend manually
+        run: |
+          docker build -t test-frontend -f front/Dockerfile .
 
       - name: Build and push frontend
         uses: docker/build-push-action@v5
