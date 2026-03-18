@@ -41,6 +41,11 @@ jobs:
             type=semver,pattern={{major}}
             type=raw,value=latest,enable={{is_default_branch}}
 
+      - name: Debug - list files
+        run: |
+          ls -la
+          ls -la front/
+
       - name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
