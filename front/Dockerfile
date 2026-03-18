@@ -6,14 +6,14 @@ WORKDIR /app
 # Install pnpm
 RUN npm install -g pnpm
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy package files from root context
+COPY front/package.json front/pnpm-lock.yaml ./
 
 # Install dependencies  
 RUN pnpm install
 
-# Copy source
-COPY . .
+# Copy source from root context
+COPY front/ .
 
 # Build
 RUN pnpm run build
@@ -21,6 +21,6 @@ RUN pnpm run build
 # Production
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY front/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
