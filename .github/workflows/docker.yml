@@ -50,17 +50,13 @@ jobs:
           ls -la front/
           echo ""
           echo "Check Dockerfile exists:"
-          cat front/Dockerfile
-
-      - name: Build frontend manually
-        run: |
-          docker build -t test-frontend -f front/Dockerfile .
+          test -f front/Dockerfile && echo "Dockerfile exists" || echo "Dockerfile NOT found"
 
       - name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./front/Dockerfile
+          file: front/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:{{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
