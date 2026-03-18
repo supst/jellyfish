@@ -6,13 +6,13 @@ WORKDIR /app
 # Install pnpm
 RUN npm install -g pnpm
 
-# Copy package files from root context
+# Copy package files (context is root, so use front/)
 COPY front/package.json front/pnpm-lock.yaml ./
 
 # Install dependencies  
 RUN pnpm install
 
-# Copy source from root context
+# Copy source
 COPY front/ .
 
 # Build
