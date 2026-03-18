@@ -43,13 +43,19 @@ jobs:
 
       - name: Debug - list files
         run: |
+          echo "Root dir:"
           ls -la
+          echo ""
+          echo "Front dir:"
           ls -la front/
+          echo ""
+          echo "Back dir:"
+          ls -la backend/
 
       - name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
-          context: ./front
+          context: .
           file: ./front/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:{{ steps.meta.outputs.tags }}
